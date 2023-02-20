@@ -1,0 +1,5 @@
+public interface INode {
+    private <T> data;
+    private INode next;
+    public void setNext(Node next);
+}
