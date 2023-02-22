@@ -1,7 +1,0 @@
-public class Node implements Node {
-    private <T> data;
-    private Node next;
-    public void Node(<T> data) {
-        this.data = data;
-    }
-}
