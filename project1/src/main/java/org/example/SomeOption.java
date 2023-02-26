@@ -14,6 +14,6 @@ public class SomeOption<T> implements Optional<T>{
 
     @Override
     public boolean isPresent() {
-        return false;
+        return true;
     }
 }

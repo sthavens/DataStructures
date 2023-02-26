@@ -92,7 +92,7 @@ public class LinkedList<T> implements IList<T>{
             return new EmptyOption<>();
         }
         Node<T> cursor = head;
-        for(int i = 0; i < this.length - 1; i++){
+        for(int i = 0; i < this.length - 2; i++){
             cursor = cursor.getNext();
         }
         Node<T> temp = tail;
@@ -123,7 +123,22 @@ public class LinkedList<T> implements IList<T>{
 
     @Override
     public boolean append(T data) {
-        return false;
+        Node<T> newNode = new Node<>(data);
+        try {
+            if (this.head == null) {
+                this.head = newNode;
+            } else {
+                Node<T> temp = tail;
+                temp.next = newNode;
+            }
+            this.tail = newNode;
+        }
+        catch (java.lang.OutOfMemoryError e) {
+            System.out.println("Out of Memory Error Detected");
+            return false;
+        }
+        this.length++;
+        return true;
     }
 
     @Override
@@ -136,11 +151,11 @@ public class LinkedList<T> implements IList<T>{
         return this.length > 0;
     }
 
-    public Node<T> Head() {
+    public Node<T> head() {
         return this.head;
     }
 
-    public Node<T> Tail() {
+    public Node<T> tail() {
         return this.tail;
     }
 }
