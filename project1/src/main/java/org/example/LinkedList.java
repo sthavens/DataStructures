@@ -152,6 +152,18 @@ public class LinkedList<T> implements IList<T>{
         return this.length == 0;
     }
 
+    @Override
+    public Optional<T> peekData(int index) {
+        if (this.getLength() > index) {
+            Node<T> cursor = head;
+            for (int i = 0; i < index; i++) {
+                cursor = cursor.getNext();
+            }
+            return new SomeOption<>(cursor.getData());
+        }
+        return new EmptyOption<>();
+    }
+
     public Node<T> head() {
         return this.head;
     }

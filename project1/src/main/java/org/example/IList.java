@@ -8,4 +8,5 @@ public interface IList<T> {
     boolean append(T data);
     int getLength();
     boolean isEmpty();
+    Optional<T> peekData(int index);
 }
