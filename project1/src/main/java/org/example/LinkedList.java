@@ -53,10 +53,7 @@ public class LinkedList<T> implements IList<T>{
         Node<T> cursor = getPreviousItem(index);
         T returnValue = removeCorrectItem(cursor);
 
-        if(this.length == 0) {
-            head = null;
-            tail = null;
-        }
+
         return new SomeOption<>(returnValue);
     }
 
@@ -98,6 +95,10 @@ public class LinkedList<T> implements IList<T>{
         Node<T> temp = tail;
         tail = cursor;
         this.length--;
+        if(this.length == 0) {
+            head = null;
+            tail = null;
+        }
         return new SomeOption<>(finalizeNode(temp));
     }
 
@@ -148,7 +149,7 @@ public class LinkedList<T> implements IList<T>{
 
     @Override
     public boolean isEmpty() {
-        return this.length > 0;
+        return this.length == 0;
     }
 
     public Node<T> head() {

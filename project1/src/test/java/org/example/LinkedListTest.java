@@ -13,88 +13,108 @@ class LinkedListTest {
         testList = new LinkedList<>();
     }
 
+    void createListWithOneItem() {
+        testList.insert("First");
+    }
+
+    void createListWithTwoItems() {
+        createListWithOneItem();
+        testList.insert("Second");
+    }
+
+    void createListWithThreeItems() {
+        createListWithTwoItems();
+        testList.insert("Third");
+    }
+
+    void createListWithFourItems() {
+        createListWithThreeItems();
+        testList.insert("Fourth");
+    }
+
+
     @Test
-    void emptyListHasNullHeadAndTail() {
+    void emptyListHasNullHeadAndTailAndLengthOfZero() {
         assertNull(testList.head());
         assertNull(testList.tail());
+        assertTrue(testList.isEmpty());
+        assertEquals(0, testList.getLength());
+    }
+
+    @Test
+    void successfullyInsertingItemReturnsTrue() {
+        assertTrue(testList.insert("Test"));
     }
 
     @Test
     void insertIntoEmptyListMakesHeadAndTailTheSameAndLengthOfOne() {
-        testList.insert("test");
-        assertEquals("test", testList.head().getData());
+        createListWithOneItem();
+        assertEquals("First", testList.head().getData());
         assertEquals(testList.head(), testList.tail());
         assertEquals(1, testList.getLength());
     }
 
     @Test
     void insertTwoItemsHaveCorrectHeadAndTailAndLengthOfTwo() {
-        testList.insert("Tail");
-        testList.insert("Head");
-        assertEquals("Head", testList.head().getData());
-        assertEquals("Tail", testList.tail().getData());
+        createListWithTwoItems();
+        assertEquals("Second", testList.head().getData());
+        assertEquals("First", testList.tail().getData());
         assertEquals(2, testList.getLength());
     }
 
     @Test
-    void insertThreeItemsHaveCorrectHeadAndTailAndLengthOfThree(){
-        testList.insert("Tail");
-        testList.insert("Middle");
-        testList.insert("Head");
-        assertEquals(testList.head().getData(), "Head");
-        assertEquals(testList.tail().getData(), "Tail");
+    void insertThreeItemsHaveCorrectHeadAndTailAndLengthOfThree() {
+        createListWithThreeItems();
+        assertEquals(testList.head().getData(), "Third");
+        assertEquals(testList.tail().getData(), "First");
         assertEquals(3, testList.getLength());
     }
 
     @Test
     void insertOneItemThenRemoveTheItemGivesEmptyListAndLengthOfZero() {
-        testList.insert("Doesn't Matter");
+        createListWithOneItem();
         testList.remove(0);
         assertNull(testList.head());
         assertNull(testList.tail());
         assertEquals(0, testList.getLength());
+        assertTrue(testList.isEmpty());
     }
 
     @Test
     void insertTwoItemsThenRemoveFirstItemLeavesTheRemainingItemHeadAndTailAreTheSameAndLengthOfOne() {
-        testList.insert("Stays");
-        testList.insert("Goes");
+        createListWithTwoItems();
         Optional<String> returnedValue = testList.remove(0);
         assertTrue(returnedValue.isPresent());
         String returnedString = returnedValue.get();
-        assertEquals("Stays", testList.head().getData());
-        assertEquals("Stays", testList.tail().getData());
+        assertEquals("First", testList.head().getData());
+        assertEquals("First", testList.tail().getData());
         assertEquals(testList.head(), testList.tail());
         assertEquals(1, testList.getLength());
-        assertEquals("Goes", returnedString);
+        assertEquals("Second", returnedString);
     }
 
     @Test
     void insertThreeItemsThenRemoveMiddleItemLeavesFirstAndLastItemAndLengthOfTwo() {
-        testList.insert("First");
-        testList.insert("Middle");
-        testList.insert("Last");
+        createListWithThreeItems();
         Optional<String> returnedValue = testList.remove(1);
         assertTrue(returnedValue.isPresent());
         String returnedString = returnedValue.get();
-        assertEquals("Last", testList.head().getData());
+        assertEquals("Third", testList.head().getData());
         assertEquals(testList.head().getNext(), testList.tail());
         assertEquals("First", testList.tail().getData());
         assertEquals(2, testList.getLength());
-        assertEquals("Middle", returnedString);
+        assertEquals("Second", returnedString);
     }
 
     @Test
     void insertThreeItemsThenRemoveLastUpdatesTail() {
-        testList.insert("Deleted");
-        testList.insert("Tail");
-        testList.insert("Head");
+        createListWithThreeItems();
         Optional<String> returnedValue = testList.remove(2);
         assertTrue(returnedValue.isPresent());
         String returnedString = returnedValue.get();
-        assertEquals("Tail", testList.tail().getData());
-        assertEquals("Head", testList.head().getData());
-        assertEquals("Deleted", returnedString);
+        assertEquals("Second", testList.tail().getData());
+        assertEquals("Third", testList.head().getData());
+        assertEquals("First", returnedString);
     }
 
     @Test
@@ -106,18 +126,71 @@ class LinkedListTest {
 
     @Test
     void RemoveItemOutsideOfBoundsFromPopulatedListReturnsEmptyOption() {
-        testList.insert("Not Used");
+        createListWithOneItem();
         Optional<String> returnedValue = testList.remove(1);
         assertFalse(returnedValue.isPresent());
         assertNull(returnedValue.get());
     }
 
     @Test
-    void append() {
+    void InsertThreeItemsThenRemoveFirstItemThreeTimesLeavesListWithNullHeadAndTailAndZeroLength() {
+        createListWithThreeItems();
+        for (int i = 0; i < 3; i++) {
+            testList.remove(0);
+        }
+        assertNull(testList.head());
+        assertNull(testList.tail());
+        assertEquals(0, testList.getLength());
+        assertTrue(testList.isEmpty());
     }
 
+    @Test
+    void InsertThreeItemsThenRemoveLastItemThreeTimesLeavesListWithNullHeadAndTailAndZeroLength() {
+        createListWithThreeItems();
+        for (int i = 0; i < 3; i++) {
+            testList.remove(testList.getLength() - 1);
+        }
+        assertNull(testList.head());
+        assertNull(testList.tail());
+        assertEquals(0, testList.getLength());
+        assertTrue(testList.isEmpty());
+    }
 
     @Test
-    void isEmpty() {
+    void InsertFourItemsThenRemoveThirdItemLeavesListWithThreeItems() {
+        createListWithFourItems();
+        testList.remove(2);
+        assertEquals(3, testList.getLength());
+    }
+
+    @Test
+    void appendItemToEmptyListSetsHeadAndTailToNewNodeAndHasLengthOfOne() {
+        assertTrue(testList.append("Head And Tail"));
+        assertEquals(testList.head(), testList.tail());
+        assertEquals("Head And Tail", testList.head().getData());
+        assertEquals(1, testList.getLength());
+    }
+
+    @Test
+    void appendItemToListWithOneItemSetsTailToNewNodeAndHasLengthOfTwo() {
+        testList.insert("Head");
+        assertTrue(testList.append("Tail"));
+        assertEquals("Head", testList.head().getData());
+        assertEquals("Tail", testList.tail().getData());
+        assertEquals(2, testList.getLength());
+    }
+
+    @Test
+    void callingPopRearOnEmptyListReturnsEmptyOption() {
+        Optional<String> returnedValue = testList.popRear();
+        assertInstanceOf(EmptyOption.class, returnedValue);
+    }
+
+    @Test
+    void callingPopRearOnListWithOneItemSetsHeadAndTailToNull() {
+        testList.insert("ThrownOut");
+        assertInstanceOf(SomeOption.class, testList.popRear());
+        assertNull(testList.head());
+        assertNull(testList.tail());
     }
 }

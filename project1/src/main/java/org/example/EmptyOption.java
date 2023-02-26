@@ -15,4 +15,5 @@ public class EmptyOption<T> implements Optional<T>{
     public boolean isPresent() {
         return false;
     }
+
 }
