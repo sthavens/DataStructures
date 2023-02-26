@@ -8,6 +8,12 @@ public class LinkedList<T> implements IList<T>{
         this.head = null;
     }
 
+    private enum NodeType{
+        Head,
+        Tail,
+        Other
+    }
+
     @Override
     public boolean insert(T data) {
         Node<T> newNode = new Node<>(data);
@@ -29,18 +35,90 @@ public class LinkedList<T> implements IList<T>{
     }
 
     @Override
-    public T remove(int index) {
-        if(index >= this.length) { //beyond bounds of LinkedList
-        }
-        if(index == this.length - 1) { //removes tail
-            Node<T> cursor = head;
-            for(int i = 0; i < length - 1; i++) {
-                cursor = cursor.getNext();
+    public Optional<T> remove(int index) {
+        NodeType nodeType = determineNodeType(index);
+        switch (nodeType) {
+            case Head -> {
+                return popFront();
             }
-            Node<T> temp = this.tail;
-            this.tail = cursor;
+            case Tail -> {
+                return popRear();
+            }
         }
-        return null; //fix
+
+        if(index >= this.length) { //beyond bounds of LinkedList
+            return new EmptyOption<>();
+        }
+
+        Node<T> cursor = getPreviousItem(index);
+        T returnValue = removeCorrectItem(cursor);
+
+        if(this.length == 0) {
+            head = null;
+            tail = null;
+        }
+        return new SomeOption<>(returnValue);
+    }
+
+    private Node<T> getPreviousItem(int index) {
+        Node<T> cursor = head;
+
+        for(int i = 0; i < index - 1; i++) {
+            cursor = cursor.getNext();
+        }
+        return cursor;
+    }
+
+    private NodeType determineNodeType(int index) {
+        if(index == 0){
+            return NodeType.Head;
+        } else if (index == this.length - 1) {
+            return NodeType.Tail;
+        } else {
+            return NodeType.Other;
+        }
+    }
+
+    private T removeCorrectItem(Node<T> cursor) {
+        Node<T> temp = cursor.getNext();
+        cursor.next = temp.getNext();
+        this.length--;
+        return finalizeNode(temp);
+    }
+
+    @Override
+    public Optional<T> popRear() {
+        if(length == 0) {
+            return new EmptyOption<>();
+        }
+        Node<T> cursor = head;
+        for(int i = 0; i < this.length - 1; i++){
+            cursor = cursor.getNext();
+        }
+        Node<T> temp = tail;
+        tail = cursor;
+        this.length--;
+        return new SomeOption<>(finalizeNode(temp));
+    }
+
+    @Override
+    public Optional<T> popFront() {
+        if(length == 0) {
+            return new EmptyOption<>();
+        }
+        Node<T> temp = head;
+        head = head.getNext();
+        this.length--;
+        if(this.length == 0) {
+            head = null;
+            tail = null;
+        }
+        return new SomeOption<>(finalizeNode(temp));
+    }
+
+    private T finalizeNode(Node<T> temp) {
+        temp.unlink();
+        return temp.unwrapData();
     }
 
     @Override
@@ -49,12 +127,20 @@ public class LinkedList<T> implements IList<T>{
     }
 
     @Override
-    public int length() {
-        return 0;
+    public int getLength() {
+        return this.length;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.length > 0;
+    }
+
+    public Node<T> Head() {
+        return this.head;
+    }
+
+    public Node<T> Tail() {
+        return this.tail;
     }
 }

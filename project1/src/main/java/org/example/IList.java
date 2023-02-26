@@ -2,8 +2,10 @@ package org.example;
 
 public interface IList<T> {
     boolean insert(T data);
-    T remove(int index);
+    Optional<T> remove(int index);
+    Optional<T> popFront();
+    Optional<T> popRear();
     boolean append(T data);
-    int length();
+    int getLength();
     boolean isEmpty();
 }
