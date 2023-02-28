@@ -66,4 +66,6 @@ class LinkedListStackTest {
     void linkedListAlwaysReturnsNotFull() {
         assertFalse(testStack.isFull());
     }
+
+
 }

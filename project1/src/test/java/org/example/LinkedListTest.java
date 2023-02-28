@@ -1,5 +1,6 @@
 package org.example;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LinkedListTest {
     LinkedList<String> testList;
+
+    private static final int KILO = 1024;
+    private static final int MEGA = 1024 * KILO;
 
     @BeforeEach
     void setUp() {
